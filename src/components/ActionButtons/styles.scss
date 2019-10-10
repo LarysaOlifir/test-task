@@ -1,0 +1,27 @@
+.action-btns {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    .btn {
+        padding: 5px 10px;
+        border-radius: 5px;
+        background-color: transparent;
+        border-color: #17a2b8;
+        color: #17a2b8;
+        cursor: pointer;
+        outline: none;
+        &:hover:not([disabled]) {
+            background-color: #17a2b8;
+            color: #fff;
+        }
+        &[disabled] {
+            opacity: 0.3;
+            cursor: default;
+        }
+    
+    }
+
+    > * {
+        margin-left: 10px;
+    }
+}

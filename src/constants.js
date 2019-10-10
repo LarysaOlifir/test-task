@@ -1,0 +1,9 @@
+export const SUCCEEDED = "_SUCCEEDED";
+export const FAILED = "_FAILED";
+export const REQUESTED = "_REQUESTED";
+
+export const ADD_COMMENT = "ADD_COMMENT";
+export const GET_COMMENTS = "GET_COMMENTS";
+export const DELETE_COMMENT = "DELETE_COMMENT";
+export const EDIT_COMMENT = "EDIT_COMMENT";
+export const TOGGLE_EDIT_COMMENT_MODE = "TOGGLE_EDIT_COMMENT_MODE";
