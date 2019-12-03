@@ -1,41 +1,37 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import CommentForm from '../CommentForm';
-import Loader from '../Loader';
-import ActionButtons from '../ActionButtons';
-import './styles.scss';
+import { Button, ButtonGroup, Spinner }  from 'react-bootstrap';
 
-class Comment extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        this.handleDelete = this.handleDelete.bind(this);
-        this.handleEdit = this.handleEdit.bind(this);
-    }
+const Comment = (props) => {
 
-    handleDelete() {
-        this.props.onDelete(this.props.id);
-    }
+    const handleEdit = (text) => {
+        props.onEdit(props.id, text);
+        props.toggleEditMode(props.id, false);
+    };
 
-    handleEdit(text) {
-        this.props.onEdit(this.props.id, text);
-        this.props.toggleEditMode(this.props.id, false);
-    }
-
-    render() {
-        return (
-            this.props.isEditing ?
-                <CommentForm text={this.props.text} onSubmit={this.handleEdit} onCancel={() => this.props.toggleEditMode(this.props.id, false)}/> :
-                <div className='comment'>
-                    <div className='comment__text'>{this.props.text}</div>
-                    {this.props.isSaving && <div className='comment__overlay'><Loader/></div>}
-                    <ActionButtons>
-                        <button  className='btn' onClick={() => this.props.toggleEditMode(this.props.id, true)}>Edit</button>
-                        <button className='btn' onClick={this.handleDelete}>Delete</button>
-                    </ActionButtons>
-                </div>
-        );  
-    }
+    return (
+        props.isEditing ?
+        <CommentForm 
+            text={props.text} 
+            onSubmit={handleEdit} 
+            onCancel={() => props.toggleEditMode(props.id, false)}/> :
+        <div className="comment">
+            <div className="comment__text">
+                {props.isSaving && <div className="comment__overlay"><Spinner animation="border" /></div>}
+                {props.text}
+            </div>
+            <ButtonGroup>
+                <Button  disabled={props.isSaving} variant="link" 
+                    onClick={() => props.toggleEditMode(props.id, true)}>Edit</Button>
+                <Button disabled={props.isSaving} variant="link" 
+                    onClick={() => props.onDelete(props.id)}>Delete</Button>
+            </ButtonGroup>
+        </div>
+    );  
 }
+
+export default Comment;
 
 Comment.propTypes = {
     text: PropTypes.string.isRequired,
@@ -43,7 +39,7 @@ Comment.propTypes = {
     isSaving: PropTypes.bool,
     isEditing: PropTypes.bool,
     onDelete: PropTypes.func.isRequired,
-    onEdit: PropTypes.func.isRequired
+    onEdit: PropTypes.func.isRequired,
+    toggleEditMode: PropTypes.func.isRequired
 };
 
-export default Comment;

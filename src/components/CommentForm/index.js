@@ -1,61 +1,37 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
-import ActionButtons from '../ActionButtons';
-import './styles.scss';
+import { ButtonGroup, Button } from 'react-bootstrap';
 
-class CommentForm extends React.PureComponent {
-    constructor(props) {
-        super(props);
-        this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleInputChange= this.handleInputChange.bind(this);
-        this.commentInput = React.createRef();
-        this.state = {
-            isValid: this.isCommentValid(props.text)
-        };
-    }
+const CommentForm =  (props) => {
+    const commentInput = useRef();
+    const [comment, setComment] = useState(props.text);
 
-    componentDidMount() {
-        this.commentInput.current.focus();
-    }
+    useEffect(() => commentInput.current && commentInput.current.focus(), [])
 
-    handleInputChange() {
-        let result = this.isCommentValid(this.commentInput.current.value);
-        if (result !== this.state.isValid) {
-            this.setState({isValid: result});
-        }
-    }
-
-    isCommentValid(text) {
-        return text && text.length > 0 && text.length < 100;
-    }
-
-    handleSubmit(event) {
+    const handleSubmit = (event)  => {
         event.preventDefault();
         event.stopPropagation();
-        this.props.onSubmit(this.commentInput.current.value);
-        if (this.props.isNew) {
-            this.commentInput.current.value = '';
-            this.setState({isValid: false});
+        props.onSubmit(comment);
+        if (props.isNew) {
+            setComment('');
         }
     }
 
-    render() {
-        return (
-            <form onSubmit={this.handleSubmit} className='comment-form' onClick={() => {this.commentInput.current.focus()}}>
-                <textarea rows={2}
-                    className='comment-form__text' 
-                    defaultValue={this.props.text} 
-                    onChange={this.handleInputChange} 
-                    ref={this.commentInput}
-                    placeholder='Enter comment...'/>
-                <ActionButtons>
-                    <button className='btn' type='submit' disabled={!this.state.isValid}>Save</button>
-                    {!this.props.isNew && <button className='btn' onClick={this.props.onCancel}>Cancel</button>}
-                </ActionButtons>
-            </form>
-        );
-    }
-  
+    return (
+        <form onSubmit={handleSubmit} className="comment-form">
+            <textarea rows={2}
+                className="comment-form__text" 
+                ref={commentInput}
+                value={comment}
+                placeholder="Enter text..."
+                onChange={(e) => {setComment(e.target.value)}}/>
+            <ButtonGroup>
+                <Button type="submit" variant="link" 
+                    disabled={!comment}>Save</Button>
+                {!props.isNew && <Button variant="link" onClick={props.onCancel}>Cancel</Button>}
+            </ButtonGroup>
+        </form>
+    );
 }
 
 CommentForm.propTypes = {
